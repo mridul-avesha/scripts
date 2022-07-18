@@ -15,11 +15,12 @@ Then run `./run.sh` to start e2e tests
 fi
 
 clusters=(controller worker-1 worker-2)
-output_loc=assets/kubeconfig/config
+output_loc=assets/kubeconfig/kind.yaml
+input_loc=assets/kind/cluster.yaml
 
 for cluster_name in ${clusters[@]}
 do
-    kind create cluster --name $cluster_name --config assets/kind/cluster.yaml --image kindest/node:v1.22.7
+    kind create cluster --name $cluster_name --config $input_loc --image kindest/node:v1.22.7
 done
 
 # Provide correct IP in kind profile, since worker operator cannot detect internal IP as nodeIp
