@@ -15,6 +15,7 @@ Then run `./run.sh` to start e2e tests
 fi
 
 clusters=(controller worker-1 worker-2)
+output_loc=assets/kubeconfig/config
 
 for cluster_name in ${clusters[@]}
 do
@@ -24,10 +25,10 @@ done
 # Provide correct IP in kind profile, since worker operator cannot detect internal IP as nodeIp
 # sed -i "s/NodeIP:.*/NodeIP: $ip/g" profile/mg.yaml
 
-cp ~/.kube/config assets/kubeconfig/config
+cp ~/.kube/config $output_loc
 
 for i in ${!clusters[@]}
 do
     ip=$(docker inspect ${clusters[$i]}-control-plane | jq -r '.[0].NetworkSettings.Networks.kind.IPAddress')
-    yq -i ".clusters[$i].cluster.server=\"https://$ip:6443\"" assets/kubeconfig/config 
+    yq -i ".clusters[$i].cluster.server=\"https://$ip:6443\"" $output_loc
 done
